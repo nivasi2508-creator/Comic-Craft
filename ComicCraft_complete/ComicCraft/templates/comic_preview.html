@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Your Comic — ComicCraft</title>
+
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <style>
+        .comic-viewer {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .panel-image img {
+            width: 100%;
+            max-height: 650px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .navigation button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .navigation button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #pageInfo {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="topbar">
+    <a class="brand" href="/">🦊 ComicCraft</a>
+    <span>{{ character_name }}'s comic</span>
+</header>
+
+<main class="preview">
+
+    <div class="preview-head">
+        <div>
+            <p class="eyebrow">YOUR STORY IS READY</p>
+            <h1>Comic Preview</h1>
+        </div>
+
+        <a class="secondary" href="/">Create Another</a>
+    </div>
+
+    <div class="comic-viewer">
+
+        {% for panel in layout %}
+        <article class="panel {% if loop.first %}active{% endif %}">
+
+            <div class="panel-image">
+                <img
+                    src="{{ panel.image_url}}"
+                    alt="{{ panel.title }}"
+                >
+            </div>
+
+            <div class="panel-copy">
+
+                <h2>
+                    Panel {{ panel.panel_number }}
+                    ·
+                    {{ panel.title }}
+                </h2>
+
+                <p class="scene">
+                    {{ panel.scene_description }}
+                </p>
+
+                {% if panel.caption %}
+                <p>
+                    <strong>Caption:</strong>
+                    {{ panel.caption }}
+                </p>
+                {% endif %}
+
+                {% if panel.narration %}
+                <p>
+                    <strong>Narration:</strong>
+                    {{ panel.narration }}
+                </p>
+                {% endif %}
+
+                {% if panel.dialogue %}
+                <p class="dialogue">
+                    “{{ panel.dialogue }}”
+                </p>
+                {% endif %}
+
+            </div>
+
+        </article>
+        {% endfor %}
+
+    </div>
+
+    <div class="navigation">
+
+        <button
+            type="button"
+            id="prevButton"
+            class="secondary button"
+            onclick="previousPanel()"
+        >
+            ← Previous
+        </button>
+
+        <span id="pageInfo">
+            Panel 1 / {{ layout|length }}
+        </span>
+
+        <button
+            type="button"
+            id="nextButton"
+            class="primary button"
+            onclick="nextPanel()"
+        >
+            Next →
+        </button>
+
+    </div>
+
+    <div class="actions">
+
+        <a
+    href="{{ pdf_path }}"
+    download
+    class="download-btn"
+>
+    Download PDF
+</a>
+
+        <a
+            class="secondary button"
+            href="/export-success"
+        >
+            Export Success Page
+        </a>
+
+    </div>
+
+</main>
+
+<script>
+    let currentPanel = 0;
+
+    const panels = document.querySelectorAll(".panel");
+    const prevButton = document.getElementById("prevButton");
+    const nextButton = document.getElementById("nextButton");
+    const pageInfo = document.getElementById("pageInfo");
+
+    function showPanel(index) {
+
+        if (panels.length === 0) {
+            return;
+        }
+
+        if (index < 0) {
+            index = 0;
+        }
+
+        if (index >= panels.length) {
+            index = panels.length - 1;
+        }
+
+        panels.forEach((panel, i) => {
+            panel.classList.toggle("active", i === index);
+        });
+
+        currentPanel = index;
+
+        pageInfo.textContent =
+            "Panel " + (currentPanel + 1) +
+            " / " + panels.length;
+
+        prevButton.disabled = currentPanel === 0;
+        nextButton.disabled =
+            currentPanel === panels.length - 1;
+    }
+
+    function nextPanel() {
+        if (currentPanel < panels.length - 1) {
+            showPanel(currentPanel + 1);
+        }
+    }
+
+    function previousPanel() {
+        if (currentPanel > 0) {
+            showPanel(currentPanel - 1);
+        }
+    }
+
+    document.addEventListener("keydown", function(event) {
+
+        if (event.key === "ArrowRight") {
+            nextPanel();
+        }
+
+        if (event.key === "ArrowLeft") {
+            previousPanel();
+        }
+
+    });
+
+    showPanel(0);
+</script>
+
+</body>
+</html>

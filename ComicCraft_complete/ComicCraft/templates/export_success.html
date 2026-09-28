@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Comic Exported - ComicCraft</title>
+<style>
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #ffe8d6 0%, #d6f3ff 50%, #e0d6ff 100%);
+        padding: 24px;
+    }
+    .card {
+        background: #ffffff;
+        max-width: 460px;
+        width: 100%;
+        border-radius: 18px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+        padding: 44px 40px;
+        text-align: center;
+    }
+    .icon { font-size: 48px; margin-bottom: 12px; }
+    h1 { margin: 0 0 8px 0; color: #2d2340; font-size: 24px; }
+    p { color: #6b6480; font-size: 14px; margin-bottom: 8px; }
+    .filename {
+        display: inline-block;
+        background: #faf9ff;
+        border: 1px solid #ddd6ee;
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-size: 12px;
+        color: #6f9bdc;
+        margin: 10px 0 24px;
+        word-break: break-all;
+    }
+    a.button {
+        display: inline-block;
+        padding: 13px 28px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #8a6fdc, #6f9bdc);
+        color: white;
+        font-weight: 700;
+        text-decoration: none;
+        box-shadow: 0 6px 16px rgba(138,111,220,0.35);
+    }
+</style>
+</head>
+<body>
+    <div class="card">
+        <div class="icon">✅</div>
+        <h1>Your comic is ready!</h1>
+        <p>Your AI-powered comic has been successfully created and downloaded.</p>
+        {% if filename %}
+        <div class="filename">{{ filename }}</div>
+        {% endif %}
+        <br/>
+        <a class="button" href="/">Go Create Another Comic</a>
+    </div>
+</body>
+</html>
